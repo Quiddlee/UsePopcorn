@@ -51,28 +51,38 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+
   return (
     <>
-      <NavBar />
-      <Main />
+      <NavBar>
+        <Search />
+        <NumResults movies={movies} />
+      </NavBar>
+
+      <Main>
+        <SearchResults>
+          <MovieList movies={movies} />
+        </SearchResults>
+        <WatchedMovies />
+      </Main>
     </>
   );
 }
 
-function NavBar() {
+function NavBar({ children }) {
   return (
     <nav className="nav-bar">
       <Logo />
-      <Search />
-      <NumResults />
+      {children}
     </nav>
   );
 }
 
-function NumResults() {
+function NumResults({ movies }) {
   return (
     <p className="num-results">
-      Found <strong>x</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 }
@@ -100,13 +110,8 @@ function Search() {
   );
 }
 
-function Main() {
-  return (
-    <main className="main">
-      <SearchResults />
-      <WatchedMovies />
-    </main>
-  );
+function Main({ children }) {
+  return <main className="main">{children}</main>;
 }
 
 function ButtonToggle({ isOpen, onOpen }) {
@@ -117,8 +122,7 @@ function ButtonToggle({ isOpen, onOpen }) {
   );
 }
 
-function SearchResults() {
-  const [movies, setMovies] = useState(tempMovieData);
+function SearchResults({ children }) {
   const [isOpen, setIsOpen] = useState(true);
 
   function handleOpen() {
@@ -128,7 +132,7 @@ function SearchResults() {
   return (
     <div className="box">
       <ButtonToggle isOpen={isOpen} onOpen={handleOpen} />
-      {isOpen && <MovieList movies={movies} />}
+      {isOpen && children}
     </div>
   );
 }
