@@ -10,6 +10,15 @@
   --color-red-dark: #e03131;
 }
 
+::-webkit-scrollbar {
+  width: .7rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 100rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -55,6 +64,7 @@ body {
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   position: relative;
+  overflow-y: scroll;
 }
 
 .loader {
