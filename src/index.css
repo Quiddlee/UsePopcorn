@@ -65,7 +65,7 @@ body {
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .loader {
