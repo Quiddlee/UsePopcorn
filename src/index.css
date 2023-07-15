@@ -11,12 +11,13 @@
 }
 
 ::-webkit-scrollbar {
-  width: .7rem;
+  width: 1.5rem;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-primary);
   border-radius: 100rem;
+  border: .4rem solid var(--color-background-500);
 }
 
 * {
