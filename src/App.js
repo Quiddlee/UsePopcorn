@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { API_KEY } from './config';
+import { API_SEARCH_NAME } from './config';
 
 const tempMovieData = [
   {
@@ -48,6 +48,11 @@ const tempWatchedData = [
   },
 ];
 
+/**
+ * @param arr {number[]}
+ * @returns {number}
+ * @description Calculates an average of the array
+ */
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
@@ -57,16 +62,25 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
-  const tempQuery = 'Avatar';
+  const [selectedId, setSelectedId] = useState(null);
+
+  /**
+   * @param id {number}
+   */
+  function handleSelectMovie(id) {
+    setSelectedId((selectedId) => (selectedId === id ? null : id));
+  }
+
+  function handleCloseMovie() {
+    setSelectedId(null);
+  }
 
   useEffect(() => {
     async function fetchMovies() {
       try {
         setError('');
         setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
-        );
+        const res = await fetch(`${API_SEARCH_NAME}${query}`);
 
         if (!res.ok)
           throw new Error('Something went wrong with fetching movies');
@@ -105,15 +119,24 @@ export default function App() {
           {isLoading && <Loader />}
 
           {!isLoading && !error ? (
-            <MovieList movies={movies} />
+            <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
           ) : (
             <ErrorMessage message={error} />
           )}
         </Box>
 
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
+          {selectedId ? (
+            <MovieDetails
+              selectedId={selectedId}
+              onCloseMovie={handleCloseMovie}
+            />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
@@ -197,19 +220,19 @@ function ButtonToggle({ isOpen, onOpen }) {
   );
 }
 
-function MovieList({ movies }) {
+function MovieList({ movies, onSelectMovie }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie movie={movie} key={movie.imdbID} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   );
 }
 
-function Movie({ movie }) {
+function Movie({ movie, onSelectMovie }) {
   return (
-    <li>
+    <li onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -219,6 +242,17 @@ function Movie({ movie }) {
         </p>
       </div>
     </li>
+  );
+}
+
+function MovieDetails({ selectedId, onCloseMovie }) {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={onCloseMovie}>
+        &larr;
+      </button>
+      <header>Avatar</header>
+    </div>
   );
 }
 
