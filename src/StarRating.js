@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { number, string, array, func } from 'prop-types';
+import { array, func, number, string } from 'prop-types';
 
 const containerStyle = {
   display: 'flex',
@@ -27,7 +27,7 @@ StarRating.propTypes = {
  * @param size {number}
  * @param className {string}
  * @param messages {string[]}
- * @param defaultRating {number}
+ * @param defaultRation {number}
  * @param onSetRatingHandler {Function}
  * @returns {JSX.Element}
  * @description Configurable rating component 🌟
