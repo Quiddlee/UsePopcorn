@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { API_SEARCH_NAME } from './config';
+import { API_SEARCH_ID, API_SEARCH_NAME, IMAGE_NOT_FOUND } from './config';
+import StarRating from './StarRating';
 
 const tempMovieData = [
   {
@@ -61,7 +62,7 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('Avatar the way');
   const [selectedId, setSelectedId] = useState(null);
 
   /**
@@ -233,7 +234,10 @@ function MovieList({ movies, onSelectMovie }) {
 function Movie({ movie, onSelectMovie }) {
   return (
     <li onClick={() => onSelectMovie(movie.imdbID)}>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <img
+        src={movie.Poster === 'N/A' ? 'logo512.png' : movie.Poster}
+        alt={`${movie.Title} poster`}
+      />
       <h3>{movie.Title}</h3>
       <div>
         <p>
@@ -246,12 +250,74 @@ function Movie({ movie, onSelectMovie }) {
 }
 
 function MovieDetails({ selectedId, onCloseMovie }) {
+  const [movieDetails, setMovieDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    Title: title,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movieDetails;
+
+  useEffect(() => {
+    async function fetchMovieDetails() {
+      setIsLoading(true);
+      const res = await fetch(`${API_SEARCH_ID}${selectedId}`);
+      const data = await res.json();
+      setMovieDetails(data);
+      setIsLoading(false);
+    }
+
+    fetchMovieDetails();
+  }, [selectedId]);
+
+  console.log(poster === IMAGE_NOT_FOUND);
+
   return (
     <div className="details">
-      <button className="btn-back" onClick={onCloseMovie}>
-        &larr;
-      </button>
-      <header>Avatar</header>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <header className="header">
+            <button className="btn-back" onClick={onCloseMovie}>
+              &larr;
+            </button>
+            <img
+              src={poster === IMAGE_NOT_FOUND ? 'logo512.png' : poster}
+              alt={`Poster of ${title} movie`}
+            />
+            <div className="details-overview">
+              <h2>{title}</h2>
+              <p>
+                {released} &bull; {runtime}
+              </p>
+              <p>{genre}</p>
+              <p>
+                <span>⭐</span>
+                {imdbRating} IMDb rating
+              </p>
+            </div>
+          </header>
+
+          <section>
+            <div className="rating">
+              <StarRating maxRating={10} size={24} />
+            </div>
+            <p>
+              <em>{plot}</em>
+              <p>Starring {actors}</p>
+              <p>Directed by {director}</p>
+            </p>
+          </section>
+        </>
+      )}
     </div>
   );
 }

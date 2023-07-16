@@ -5,3 +5,4 @@ export const API_SEARCH_BY_ID_POSTFIX = '&i=';
 
 export const API_SEARCH_NAME = `${API_URL}${API_SEARCH_BY_NAME_POSTFIX}`;
 export const API_SEARCH_ID = `${API_URL}${API_SEARCH_BY_ID_POSTFIX}`;
+export const IMAGE_NOT_FOUND = 'N/A';
