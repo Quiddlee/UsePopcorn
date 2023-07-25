@@ -78,6 +78,17 @@ export default function App() {
     setSelectedId(null);
   }
 
+  /**
+   * @param movie {{
+   *       imdbID: string,
+   *       title: string,
+   *       year: string,
+   *       poster: string,
+   *       imdbRating: number,
+   *       runtime: number,
+   *       userRating: number
+   *       }}
+   */
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
   }
