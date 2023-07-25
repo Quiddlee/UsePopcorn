@@ -315,6 +315,11 @@ function MovieDetails({
     fetchMovieDetails();
   }, [selectedId]);
 
+  useEffect(() => {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+  }, [title]);
+
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
