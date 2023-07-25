@@ -27,7 +27,7 @@ StarRating.propTypes = {
  * @param size {number}
  * @param className {string}
  * @param messages {string[]}
- * @param defaultRation {number}
+ * @param defaultRating {number}
  * @param onSetRatingHandler {Function}
  * @returns {JSX.Element}
  * @description Configurable rating component 🌟
@@ -38,10 +38,10 @@ export default function StarRating({
   size = 48,
   className = '',
   messages = [],
-  defaultRation = 0,
+  defaultRating = 0,
   onSetRatingHandler,
 }) {
-  const [rating, setRating] = useState(defaultRation);
+  const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
   const textStyle = {

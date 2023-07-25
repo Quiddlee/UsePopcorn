@@ -136,6 +136,7 @@ export default function App() {
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
               onAddWatched={handleAddWatched}
+              watchedMovies={watched}
             />
           ) : (
             <>
@@ -254,9 +255,20 @@ function Movie({ movie, onSelectMovie }) {
   );
 }
 
-function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
+function MovieDetails({
+  selectedId,
+  onCloseMovie,
+  onAddWatched,
+  watchedMovies,
+}) {
   const [movieDetails, setMovieDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState('');
+
+  const selectedMovieRating = watchedMovies.find(
+    (movie) => movie.imdbID === selectedId,
+  )?.userRating;
+  const isWatched = !!selectedMovieRating;
 
   const {
     Title: title,
@@ -291,8 +303,11 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       poster,
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(' ').at(0)),
+      userRating,
     };
+
     onAddWatched(newWatchedMovie);
+    onCloseMovie();
   }
 
   return (
@@ -324,11 +339,26 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
 
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={24} />
-              <button className="btn-add" onClick={handleAdd}>
-                + add
-              </button>
+              {!isWatched ? (
+                <>
+                  <StarRating
+                    defaultRating={selectedMovieRating}
+                    maxRating={10}
+                    size={24}
+                    onSetRatingHandler={setUserRating}
+                  />
+
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAdd}>
+                      + add
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>You rated this movie with {selectedMovieRating} 🌟</p>
+              )}
             </div>
+
             <p>
               <em>{plot}</em>
               <p>Starring {actors}</p>
