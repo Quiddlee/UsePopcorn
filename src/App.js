@@ -64,7 +64,7 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [query, setQuery] = useState('Avatar the way');
+  const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
 
   /**
@@ -316,6 +316,20 @@ function MovieDetails({
   } = movieDetails;
 
   useEffect(() => {
+    function handleKeyPress(e) {
+      if (e.key === 'Escape') {
+        onCloseMovie();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return function () {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [onCloseMovie]);
+
+  useEffect(() => {
     async function fetchMovieDetails() {
       setIsLoading(true);
       const res = await fetch(`${API_SEARCH_ID}${selectedId}`);
@@ -402,8 +416,8 @@ function MovieDetails({
 
             <p>
               <em>{plot}</em>
-              <p>Starring {actors}</p>
-              <p>Directed by {director}</p>
+              <span>Starring {actors}</span>
+              <span>Directed by {director}</span>
             </p>
           </section>
         </>
