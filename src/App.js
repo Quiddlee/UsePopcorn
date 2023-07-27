@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { API_SEARCH_ID, API_SEARCH_NAME, IMAGE_NOT_FOUND, LOCAL_STORAGE_WATCHED } from './config';
 import StarRating from './StarRating';
 
@@ -180,6 +180,25 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
+  /**
+   * @type {React.MutableRefObject<HTMLInputElement>}
+   */
+  const searchElem = useRef(null);
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (document.activeElement === searchElem.current) return;
+
+      if (e.key === 'Enter') {
+        searchElem.current.focus();
+        setQuery('');
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [setQuery]);
+
   return (
     <input
       className="search"
@@ -187,6 +206,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={searchElem}
     />
   );
 }
