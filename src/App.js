@@ -3,6 +3,7 @@ import { API_SEARCH_ID, IMAGE_NOT_FOUND, LOCAL_STORAGE_WATCHED } from './config'
 import StarRating from './StarRating';
 import { useMovies } from './useMovies';
 import { useLocalStorageState } from './useLocalStorageState';
+import { useKey } from './useKey';
 
 /**
  * @param arr {number[]}
@@ -134,20 +135,11 @@ function Search({ query, setQuery }) {
    * @type {React.MutableRefObject<HTMLInputElement>}
    */
   const searchElem = useRef(null);
-
-  useEffect(() => {
-    function handleKeyDown(e) {
-      if (document.activeElement === searchElem.current) return;
-
-      if (e.key === 'Enter') {
-        searchElem.current.focus();
-        setQuery('');
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [setQuery]);
+  useKey('enter', () => {
+    if (document.activeElement === searchElem.current) return;
+    searchElem.current.focus();
+    setQuery('');
+  });
 
   return (
     <input
@@ -225,6 +217,7 @@ function MovieDetails({
   const [movieDetails, setMovieDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState('');
+  useKey('escape', onCloseMovie);
 
   const selectedMovieRating = watchedMovies.find(
     (movie) => movie.imdbID === selectedId,
@@ -243,20 +236,6 @@ function MovieDetails({
     Genre: genre,
     Year: year,
   } = movieDetails;
-
-  useEffect(() => {
-    function handleKeyPress(e) {
-      if (e.key === 'Escape') {
-        onCloseMovie();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyPress);
-
-    return function () {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [onCloseMovie]);
 
   useEffect(() => {
     async function fetchMovieDetails() {
