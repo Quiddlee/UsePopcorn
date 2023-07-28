@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { API_SEARCH_ID, IMAGE_NOT_FOUND, LOCAL_STORAGE_WATCHED } from './config';
 import StarRating from './StarRating';
 import { useMovies } from './useMovies';
+import { useLocalStorageState } from './useLocalStorageState';
 
 /**
  * @param arr {number[]}
@@ -16,10 +17,8 @@ const average = (arr) =>
 export default function App() {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
-  const [watched, setWatched] = useState(() => {
-    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_WATCHED));
-  });
   const { movies, isLoading, error } = useMovies(query);
+  const [watched, setWatched] = useLocalStorageState([], LOCAL_STORAGE_WATCHED);
 
   /**
    * @param id {number}
@@ -50,10 +49,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_WATCHED, JSON.stringify(watched));
-  }, [watched]);
 
   return (
     <>

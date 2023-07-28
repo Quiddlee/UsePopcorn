@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 /**
  * @param query {string}
- * @param [callback] {Function}
  * @return {{movies: Object[], isLoading: boolean, error: string}}
  * @description Fetching the movies from database by given query
  */
