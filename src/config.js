@@ -1,5 +1,5 @@
 export const API_KEY = 'dbb72d83';
-export const API_URL = `http://www.omdbapi.com/?apikey=${API_KEY}`;
+export const API_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
 export const API_SEARCH_BY_NAME_POSTFIX = '&s=';
 export const API_SEARCH_BY_ID_POSTFIX = '&i=';
 
