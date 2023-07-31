@@ -1,1 +1,0 @@
-# UsePopcorn | React course project
